@@ -5,14 +5,14 @@
         <div class="city_hot">
           <h2>热门城市</h2>
           <ul class="clearfix">
-            <li v-for="city in hotList" :key="city.id">{{city.nm}}</li>
+            <li v-for="city in hotList" :key="city.id" @tap="changeCityTo(city.id,city.nm)">{{city.nm}}</li>
           </ul>
         </div>
         <div class="city_sort" ref="city_sort">
           <div v-for="letterSet in cityList" :key="letterSet.index">
             <h2>{{letterSet.index}}</h2>
             <ul>
-              <li v-for="city in letterSet.list" :key="city.id">{{city.nm}}</li>
+              <li v-for="city in letterSet.list" :key="city.id" @tap="changeCityTo(city.id,city.nm)">{{city.nm}}</li>
             </ul>
           </div>
         </div>
@@ -20,7 +20,7 @@
     </BScroller>
     <div class="city_index">
       <ul>
-        <li v-for="(letterSet,index) in cityList" :key="index"  @touchstart="jumpTo(index)">
+        <li v-for="(letterSet,index) in cityList" :key="index" @touchstart="jumpTo(index)">
           {{letterSet.index}}
         </li>
       </ul>
@@ -42,14 +42,24 @@ export default {
   },
 
   mounted () {
-    Axios.get('../../data/cities-min.json').then((res) => {
-      const letterMap = res.data.letterMap
-      const { cityList, hotList } = this.formatCitylist(letterMap)
-      this.cityList = cityList
-      this.hotList = hotList
-    }).catch((err) => {
-      console.log(err)
-    })
+    var cityList = window.localStorage.getItem('cityList')
+    var hotList = window.localStorage.getItem('hotList')
+    if (cityList && hotList) { // 本地存在数据
+      this.cityList = JSON.parse(cityList)
+      this.hotList = JSON.parse(hotList)
+    } else { // 本地不存在发起Axios异步请求
+      Axios.get('../../data/cities-min.json').then((res) => {
+        const letterMap = res.data.letterMap
+        const { cityList, hotList } = this.formatCitylist(letterMap)
+        this.cityList = cityList
+        this.hotList = hotList
+        // 将cityList和hotList存储在本地
+        window.localStorage.setItem('cityList', JSON.stringify(cityList))
+        window.localStorage.setItem('hotList', JSON.stringify(hotList))
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
   },
 
   methods: {
@@ -78,6 +88,14 @@ export default {
     jumpTo (index) {
       var h2s = this.$refs.city_sort.getElementsByTagName('h2')
       this.$refs.city_scroll.jumpToElement(h2s[index])
+    },
+
+    /** 点击切换城市 */
+    changeCityTo (cityId, cityNm) {
+      window.localStorage.setItem('cityNm', cityNm)
+      window.localStorage.setItem('cityId', cityId)
+      this.$store.commit('city/CITY_INFO', { id: cityId, nm: cityNm })
+      this.$router.push('/film/nowplaying')
     }
   }
 

@@ -5,7 +5,7 @@
       <!-- 菜单 begin -->
       <div class="movie_menu">
         <router-link tag="div" to="/film/city" class="city_name">
-          <span>大连</span><i class="iconfont icon-lower-triangle"></i>
+          <span>{{$store.state.city.nm}}</span><i class="iconfont icon-lower-triangle"></i>
         </router-link>
         <div class="hot_swtich">
           <router-link tag="div" to="/film/nowplaying" class="hot_item">正在热映</router-link>
@@ -27,8 +27,60 @@
 </template>
 
 <script>
+import Axios from 'axios'
+
 export default {
-  name: 'Film'
+  name: 'Film',
+
+  data () {
+    return {
+    }
+  },
+
+  mounted () {
+    var cityNm = window.localStorage.getItem('cityNm')
+    var cityId = window.localStorage.getItem('cityId')
+    if (cityNm && cityId) {
+      this.$store.state.city.nm = cityNm
+      this.$store.state.city.id = cityId
+    } else {
+      Axios.get('../data/cities-min.json').then(res => {
+        console.log(res.data.geoCity)
+        const curCity = res.data.geoCity
+        const letterMap = res.data.letterMap
+        const { cityList, hotList } = this.formatCitylist(letterMap)
+        window.localStorage.setItem('cityNm', curCity.nm)
+        window.localStorage.setItem('cityId', curCity.id)
+        window.localStorage.setItem('cityList', JSON.stringify(cityList))
+        window.localStorage.setItem('hotList', JSON.stringify(hotList))
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+
+  methods: {
+    /** 将城市接口数据转换成需要的数据结构 */
+    formatCitylist (oldCityList) {
+      const cityList = []
+      const hotList = []
+      for (var letter in oldCityList) {
+        var letterCity = {
+          index: letter,
+          list: oldCityList.[letter]
+        }
+        cityList.push(letterCity)
+        // 添加热门城市
+        for (var city in oldCityList.[letter]) {
+          if (oldCityList.[letter][city].isHot === 1) {
+            hotList.push(oldCityList.[letter][city])
+          }
+        }
+      }
+
+      return { cityList, hotList }
+    }
+  }
 }
 </script>
 
