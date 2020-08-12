@@ -1,6 +1,7 @@
 <template>
   <div class="cinema_body">
-    <BScroller>
+    <Loading v-if="isLoading"></Loading>
+    <BScroller v-else>
       <ul>
         <li v-for="cinema in cinemaList" :key="cinema.id">
           <div>
@@ -30,18 +31,22 @@ export default {
   data () {
     return {
       preCity: -1,
+      isLoading: true,
       cinemaList: []
     }
   },
 
   activated () {
+    this.isLoading = true
     const curCityId = this.$store.state.city.id
     if (curCityId === this.preCity) {
+      this.isLoading = false
       return
     }
     Axios.get(`/ajax/cinemaList?ci=${curCityId}`).then((res) => {
       this.cinemaList = res.data.cinemas
       this.preCity = curCityId
+      this.isLoading = false
     }).catch((err) => {
       console.log(err)
     })

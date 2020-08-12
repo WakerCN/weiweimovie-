@@ -1,6 +1,7 @@
 <template>
   <div class="city_body">
-    <BScroller ref="city_scroll">
+    <Loading v-if="isLoading"></Loading>
+    <BScroller v-else ref="city_scroll">
       <div class="city_list">
         <div class="city_hot">
           <h2>热门城市</h2>
@@ -36,17 +37,20 @@ export default {
 
   data () {
     return {
+      isLoading: true,
       cityList: [],
       hotList: []
     }
   },
 
   mounted () {
+    this.isLoading = true
     var cityList = window.localStorage.getItem('cityList')
     var hotList = window.localStorage.getItem('hotList')
     if (cityList && hotList) { // 本地存在数据
       this.cityList = JSON.parse(cityList)
       this.hotList = JSON.parse(hotList)
+      this.isLoading = false
     } else { // 本地不存在发起Axios异步请求
       Axios.get('../../data/cities-min.json').then((res) => {
         const letterMap = res.data.letterMap
@@ -56,6 +60,7 @@ export default {
         // 将cityList和hotList存储在本地
         window.localStorage.setItem('cityList', JSON.stringify(cityList))
         window.localStorage.setItem('hotList', JSON.stringify(hotList))
+        this.isLoading = false
       }).catch((err) => {
         console.log(err)
       })
