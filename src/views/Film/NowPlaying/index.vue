@@ -31,6 +31,7 @@ export default {
 
   data () {
     return {
+      preCity: -1,
       filmList: []
     }
   },
@@ -41,11 +42,15 @@ export default {
     }
   },
 
-  mounted () {
-    // 挂载便开始请求
-    Axios.get('/ajax/movieOnInfoList?ci=57').then((res) => {
+  activated () {
+    const curCityId = this.$store.state.city.id
+    if (curCityId === this.preCity) {
+      return
+    }
+    Axios.get(`/ajax/movieOnInfoList?ci=${curCityId}`).then((res) => {
       if (res.statusText === 'OK') {
         this.filmList = res.data.movieList
+        this.preCity = curCityId
       }
     }).catch((err) => {
       console.log(err)

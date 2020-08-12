@@ -29,14 +29,19 @@ export default {
 
   data () {
     return {
+      preCity: -1,
       cinemaList: []
     }
   },
 
-  mounted () {
-    Axios.get('/ajax/cinemaList?ci=57').then((res) => {
-      console.log(res.data.cinemas)
+  activated () {
+    const curCityId = this.$store.state.city.id
+    if (curCityId === this.preCity) {
+      return
+    }
+    Axios.get(`/ajax/cinemaList?ci=${curCityId}`).then((res) => {
       this.cinemaList = res.data.cinemas
+      this.preCity = curCityId
     }).catch((err) => {
       console.log(err)
     })

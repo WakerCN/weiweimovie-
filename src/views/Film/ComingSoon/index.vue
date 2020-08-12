@@ -27,14 +27,19 @@ export default {
 
   data () {
     return {
+      preCity: -1,
       comingList: []
     }
   },
 
-  mounted () {
-    Axios.get('/ajax/comingList?ci=57&token=&limit=10').then((res) => {
-      console.log(res.data.coming)
+  activated () {
+    const curCityId = this.$store.state.city.id
+    if (curCityId === this.preCity) {
+      return
+    }
+    Axios.get(`/ajax/comingList?ci=${curCityId}&token=&limit=10`).then((res) => {
       this.comingList = res.data.coming
+      this.preCity = curCityId
     }).catch((err) => {
       console.log(err)
     })
