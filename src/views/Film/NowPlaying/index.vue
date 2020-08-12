@@ -1,6 +1,7 @@
 <template>
   <div class="movie_body" ref="movie_body">
-    <BScroller>
+    <Loading v-if="isLoading"></Loading>
+    <BScroller v-else>
       <ul>
         <li v-for="film in filmList" :key="film.id">
           <div class="pic_show"><img :src="film.img | ImgUrlFilter_128w_180h"></div>
@@ -32,6 +33,7 @@ export default {
   data () {
     return {
       preCity: -1,
+      isLoading: true,
       filmList: []
     }
   },
@@ -43,13 +45,16 @@ export default {
   },
 
   activated () {
+    this.isLoading = true
     const curCityId = this.$store.state.city.id
     if (curCityId === this.preCity) {
+      this.isLoading = false
       return
     }
     Axios.get(`/ajax/movieOnInfoList?ci=${curCityId}`).then((res) => {
       if (res.statusText === 'OK') {
         this.filmList = res.data.movieList
+        this.isLoading = false
         this.preCity = curCityId
       }
     }).catch((err) => {

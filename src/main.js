@@ -7,12 +7,14 @@ import store from './store'
 import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
 import BScroller from '@/components/BScroller'
+import Loading from './components/Loading'
 /* 全局组件引入 end */
 
 /* 全局组件注册 begin */
 Vue.component('Header', Header)
 Vue.component('TabBar', TabBar)
 Vue.component('BScroller', BScroller)
+Vue.component('Loading', Loading)
 /* 全局组件注册 end */
 
 /* 全局过滤器 begin */
