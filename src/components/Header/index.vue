@@ -1,12 +1,19 @@
 <template>
   <header id="header">
-    <h1>喵喵电影</h1>
+    <h1>{{title}}</h1>
   </header>
 </template>
 
 <script>
 export default {
-  name: 'Header'
+  name: 'Header',
+
+  props: {
+    title: {
+      type: String,
+      default: '威威电影'
+    }
+  }
 }
 </script>
 

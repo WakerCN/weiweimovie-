@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <Header></Header>
+    <Header title="威威电影"></Header>
     <div id="content">
       <!-- 菜单 begin -->
       <div class="movie_menu">
