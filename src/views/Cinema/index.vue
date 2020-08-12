@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <Header></Header>
+    <Header title="影院详情"></Header>
     <div id="content">
       <!-- Cinema菜单（静态） begin -->
       <div class="cinema_menu">

@@ -3,28 +3,19 @@
     <div class="search_input">
       <div class="search_input_wrapper">
         <i class="iconfont icon-sousuo"></i>
-        <input type="text">
+        <input type="text" v-model="searchTxt">
       </div>
     </div>
     <div class="search_result">
       <h3>电影/电视剧/综艺</h3>
       <ul>
-        <li>
-          <div class="img"><img src="/images/movie_1.jpg"></div>
+        <li v-for="film in searchList" :key="film.id">
+          <div class="img"><img :src="film.img | ImgUrlFilter_128w_180h"></div>
           <div class="info">
-            <p><span>无名之辈</span><span>8.5</span></p>
-            <p>A Cool Fish</p>
-            <p>剧情,喜剧,犯罪</p>
-            <p>2018-11-16</p>
-          </div>
-        </li>
-        <li>
-          <div class="img"><img src="/images/movie_1.jpg"></div>
-          <div class="info">
-            <p><span>无名之辈</span><span>8.5</span></p>
-            <p>A Cool Fish</p>
-            <p>剧情,喜剧,犯罪</p>
-            <p>2018-11-16</p>
+            <p><span>{{film.nm}}</span><span v-if="film.sc != 0">{{film.sc}}</span></p>
+            <p>{{film.enm}}</p>
+            <p>{{film.cat}}</p>
+            <p>{{film.rt}}</p>
           </div>
         </li>
       </ul>
@@ -33,8 +24,41 @@
 </template>
 
 <script>
+import Axios from 'axios'
 export default {
-  name: 'Search'
+  name: 'Search',
+
+  data () {
+    return {
+      searchTxt: '',
+      searchList: []
+    }
+  },
+
+  watch: {
+    searchTxt (newVal) {
+      var that = this
+      this.cancelRequest()
+      Axios.get(`/ajax/search?kw=${newVal}&cityId=57`, {
+        cancelToken: new Axios.CancelToken((c) => {
+          that.source = c
+        })
+      }).then(res => {
+        this.searchList = res.data.movies.list
+        console.log(res.data.movies)
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+
+  methods: {
+    cancelRequest () {
+      if (typeof this.source === 'function') {
+        this.source('终止请求')
+      }
+    }
+  }
 }
 </script>
 
