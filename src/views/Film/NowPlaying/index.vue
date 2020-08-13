@@ -1,8 +1,9 @@
 <template>
   <div class="movie_body" ref="movie_body">
     <Loading v-if="isLoading"></Loading>
-    <BScroller v-else>
+    <BScroller v-else :pullDownRefresh="refreshFilmList" :pullUpLoad="loadMore(curLoadPage)">
       <ul>
+        <li v-if="isRefreshing" style="height: 20px" ref="refresh">刷新中...</li>
         <li v-for="film in filmList" :key="film.id">
           <div class="pic_show"><img :src="film.img | ImgUrlFilter_128w_180h"></div>
           <div class="info_list">
@@ -34,6 +35,8 @@ export default {
     return {
       preCity: -1,
       isLoading: true,
+      isRefreshing: false,
+      curLoadPage: 1,
       filmList: []
     }
   },
@@ -60,6 +63,31 @@ export default {
     }).catch((err) => {
       console.log(err)
     })
+  },
+
+  methods: {
+    /** 刷新电影列表 */
+    refreshFilmList () {
+      this.isRefreshing = true
+      Axios.get(`/ajax/movieOnInfoList?ci=${this.preCity}`).then((res) => {
+        if (res.statusText === 'OK') {
+          this.filmList = res.data.movieList
+          this.$refs.refresh.innerHTML = '刷新成功'
+          setTimeout(() => {
+            this.isRefreshing = false
+          }, 2000)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+
+    /** 加载更多电影列表 */
+    loadMore (curLoadPage) {
+      console.log(curLoadPage)
+      console.log('加载')
+    }
+
   }
 
 }
