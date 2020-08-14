@@ -12,6 +12,10 @@ const routes = [
   cinemaRouter,
   mineRouter,
   {
+    path: '/detail/:filmId',
+    component: () => import('@/views/Detail')
+  },
+  {
     path: '/*',
     redirect: '/film/nowplaying'
   }

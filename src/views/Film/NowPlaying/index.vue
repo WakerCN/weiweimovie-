@@ -1,10 +1,10 @@
 <template>
   <div class="movie_body" ref="movie_body">
     <Loading v-if="isLoading"></Loading>
-    <BScroller v-else :pullDownRefresh="refreshFilmList" :pullUpLoad="loadMore(curLoadPage)">
+    <BScroller v-else :pullDownRefresh="refreshFilmList" :pullUpLoad="loadMore">
       <ul>
         <li v-if="isRefreshing" style="height: 20px" ref="refresh">刷新中...</li>
-        <li v-for="film in filmList" :key="film.id">
+        <li v-for="film in filmList" :key="film.id" @tap="handleToDetail(film.id)">
           <div class="pic_show"><img :src="film.img | ImgUrlFilter_128w_180h"></div>
           <div class="info_list">
             <h2>
@@ -83,11 +83,14 @@ export default {
     },
 
     /** 加载更多电影列表 */
-    loadMore (curLoadPage) {
-      console.log(curLoadPage)
-      console.log('加载')
-    }
+    loadMore () {
+      console.log('加载更多' + this.curLoadPage)
+    },
 
+    /** 跳转到详情页 */
+    handleToDetail (filmId) {
+      this.$router.push(`/detail/${filmId}`)
+    }
   }
 
 }

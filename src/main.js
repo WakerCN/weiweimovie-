@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
+import router from './routers'
+import store from './stores'
 
 /* 全局组件引入 begin */
 import Header from '@/components/Header'

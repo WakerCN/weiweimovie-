@@ -1,7 +1,7 @@
 <template>
   <div class="cinema_body">
     <Loading v-if="isLoading"></Loading>
-    <BScroller v-else>
+    <BScroller v-else :pullUpLoad="loadMore">
       <ul>
         <li v-for="cinema in cinemaList" :key="cinema.id">
           <div>
@@ -50,6 +50,12 @@ export default {
     }).catch((err) => {
       console.log(err)
     })
+  },
+
+  methods: {
+    loadMore () {
+      console.log('加载更多影院')
+    }
   }
 }
 </script>
