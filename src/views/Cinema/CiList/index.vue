@@ -36,7 +36,7 @@ export default {
     }
   },
 
-  activated () {
+  mounted () {
     this.isLoading = true
     const curCityId = this.$store.state.city.id
     if (curCityId === this.preCity) {

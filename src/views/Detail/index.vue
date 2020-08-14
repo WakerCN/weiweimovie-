@@ -54,10 +54,9 @@ export default {
     // Swiper
   },
 
-  activated () {
+  mounted () {
     Axios.get(`/ajax/detailmovie?movieId=${this.filmId}`).then(res => {
       this.filmInfo = res.data.detailMovie
-      // this.photos = res.data.detailMovie.photos
     }).catch(err => {
       console.log(err)
     })
@@ -65,7 +64,7 @@ export default {
 
   methods: {
     backToFilm () {
-      this.$router.back()
+      this.$router.push('film/nowplaying')
     }
   }
 }
