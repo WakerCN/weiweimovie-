@@ -3,12 +3,24 @@ import App from './App.vue'
 import router from './routers'
 import store from './stores'
 
+/* UI库 begin */
+import MintUI from 'mint-ui'
+import 'mint-ui/lib/style.css'
+import 'default-passive-events'
+
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+/* UI库 end */
+
 /* 全局组件引入 begin */
 import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
 import BScroller from '@/components/BScroller'
 import Loading from './components/Loading'
 /* 全局组件引入 end */
+
+Vue.use(MintUI)
+Vue.use(ElementUI)
 
 /* 全局组件注册 begin */
 Vue.component('Header', Header)

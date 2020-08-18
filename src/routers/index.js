@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import filmRouter from './film'
 import cinemaRouter from './cinema'
 import mineRouter from './mine'
+import adminRouter from './admin'
 
 Vue.use(VueRouter)
 
@@ -11,6 +12,7 @@ const routes = [
   filmRouter,
   cinemaRouter,
   mineRouter,
+  adminRouter,
   {
     path: '/detail/:filmId',
     component: () => import('@/views/Detail')
@@ -23,8 +25,8 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
-  // base: 'miaomiao',
+  // base: process.env.BASE_URL,
+  base: 'weiwei',
   routes
 })
 

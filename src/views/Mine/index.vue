@@ -2,20 +2,16 @@
   <div id="main">
     <Header title="个人中心"></Header>
     <div id="content">
-      <Login></Login>
+      <router-view></router-view>
     </div>
     <TabBar></TabBar>
   </div>
 </template>
 
 <script>
-import Login from '../../views/Mine/Login'
 
 export default {
-  name: 'Mine',
-  components: {
-    Login
-  }
+  name: 'Mine'
 }
 </script>
 

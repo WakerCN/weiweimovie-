@@ -1,26 +1,80 @@
 <template>
   <div class="login_body">
-    <form action="">
-      <div>
-        <input class="login_text" type="text" placeHolder="账户名/手机号/Email">
-      </div>
-      <div>
-        <input class="login_text" type="password" placeHolder="请输入您的密码" autocomplete>
-      </div>
-      <div class="login_btn">
-        <input type="submit" value="登录">
-      </div>
-    </form>
+    <div>
+      <input v-model="username" class="login_text" type="text" placeHolder="账户名">
+    </div>
+    <div>
+      <input v-model="password" class="login_text" type="password" placeHolder="请输入您的密码" autocomplete>
+    </div>
+    <div>
+      <input v-model="verifyImg" class="login_text" type="text" placeHolder="验证码">
+      <img src="/ajax2/users/verifyImg" style="margin-left: 10px" @click="handleChangeVerifyImg">
+    </div>
+    <div class="login_btn">
+      <input type="submit" value="登录" @click="handleToLogin">
+    </div>
     <div class="login_link">
-      <a href="#">立即注册</a>
-      <a href="#">找回密码</a>
+      <router-link to="/mine/register">立即注册</router-link>
+      <router-link to="/mine/findPassword">找回密码</router-link>
     </div>
   </div>
 </template>
 
 <script>
+import Axios from 'axios'
+import { MessageBox } from 'mint-ui'
+
 export default {
-  name: 'Login'
+  name: 'Login',
+
+  data () {
+    return {
+      username: '',
+      password: '',
+      verifyImg: ''
+    }
+  },
+
+  methods: {
+    /** 登录 */
+    handleToLogin () {
+      Axios.post('/ajax2/users/login', {
+        username: this.username,
+        password: this.password,
+        verifyImg: this.verifyImg
+      }).then(res => {
+        const status = res.data.status
+        if (status === -1) {
+          MessageBox({
+            title: '提示',
+            message: '登录失败，请重新输入密码'
+          })
+        } else if (status === 0) {
+          MessageBox({
+            title: '提示',
+            message: '登录成功'
+          }).then((action) => {
+            this.$router.push('/mine/center')
+          })
+        } else if (status === -2) {
+          MessageBox({
+            title: '提示',
+            message: '账号已冻结'
+          })
+        } else if (status === -3) {
+          MessageBox({
+            title: '提示',
+            message: res.data.msg
+          })
+        }
+      })
+    },
+
+    /** 刷新图形验证码 */
+    handleChangeVerifyImg (ev) {
+      ev.target.src = '/ajax2/users/verifyImg?' + Math.random()
+    }
+  }
 }
 </script>
 
